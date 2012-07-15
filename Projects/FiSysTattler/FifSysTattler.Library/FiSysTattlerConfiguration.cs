@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace FifSysTattler.Library
 {
-    public class FiSysConfiguration
+    public class FiSysTattlerConfiguration
     {
+		
     }
 }
