@@ -39,12 +39,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\Version.cs" />
     <Compile Include="EventNotificationType.cs" />
-    <Compile Include="FileSystemWatchItem.cs" />
-    <Compile Include="FiSysTattlerConfiguration.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="Configuration\FileSystemWatchItem.cs" />
+    <Compile Include="Configuration\FiSysTattlerConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\SerializationHelper.cs" />
     <Compile Include="WatcherManager.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
