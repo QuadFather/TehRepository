@@ -23,7 +23,53 @@ namespace FifSysTattler.Library.Configuration
 
 		private FiSysTattlerConfiguration()
 		{
+			var now = DateTime.Now;
+			VersionInfo = new Version
+				{
+					LastModified = DateTime.Now,
+					ModifiedBy = Environment.UserName,
+					Name = string.Format("New Configuration {0}", now.ToString("u"))
+				};
+
+			Watches = new List<FileSystemWatchItem>();
+		}
+
+		public void SaveConfiguration(string filePath)
+		{
+			var folderPath = Path.GetDirectoryName(filePath);
+
+			if (folderPath == null || !Directory.Exists(folderPath))
+			{
+				throw new DirectoryNotFoundException(string.Format(
+														"The directory: {0}, could not be found. File: {1} could not be created.",
+														folderPath ?? "{Not Provided}", 
+														filePath ?? "{Not Provided}"));
+			}
+
+			var serializer = this.GetXmlSerializer();
+
+			var ns = new XmlSerializerNamespaces();
+			ns.Add(string.Empty, string.Empty);
 			
+			using (var memStream = SerializationHelper.SerializeToXmlText(this, serializer, ns))
+			{
+				if (File.Exists(filePath))
+				{
+					var ext = Path.GetExtension(filePath);
+					var fileName = Path.GetFileNameWithoutExtension(filePath);
+
+					File.Move(filePath, Path.Combine(folderPath, fileName + "." + Path.GetRandomFileName() + ext));
+				}
+
+				using (var writer = File.OpenWrite(filePath))
+				{
+					var buffer = new byte[1024];
+					while (memStream.Read(buffer, 0, buffer.Length) > 0)
+					{
+						writer.Write(buffer, 0, buffer.Length);
+					}
+				}
+			}
 		}
 
 		public static FiSysTattlerConfiguration LoadConfiguration(string filePath)
@@ -48,6 +94,11 @@ namespace FifSysTattler.Library.Configuration
 			}
 			
 			return config;
+		}
+
+		public static FiSysTattlerConfiguration GetNewDefaultConfiguration()
+		{
+			return new FiSysTattlerConfiguration();
 		}
 	}
 }

@@ -16,13 +16,20 @@ namespace FifSysTattler.Library.Utility
 			return (T)serializer.Deserialize(memStream);
 		}
 
-		public static MemoryStream SerializeToXmlText<T>(T item, XmlSerializer serializer)
+		public static MemoryStream SerializeToXmlText<T>(T item, XmlSerializer serializer, XmlSerializerNamespaces namespaces = null)
 		{
 			var memStream = new MemoryStream();
 
 			var xmlText = new XmlTextWriter(memStream, Encoding.UTF8);
 			
-			serializer.Serialize(xmlText, item);
+			if (namespaces != null)
+			{
+				serializer.Serialize(xmlText, item, namespaces);
+			}
+			else
+			{
+				serializer.Serialize(xmlText, item);
+			}
 			
 			memStream.Seek(0, SeekOrigin.Begin);
 
