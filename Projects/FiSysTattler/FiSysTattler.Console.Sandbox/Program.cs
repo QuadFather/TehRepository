@@ -37,6 +37,10 @@ namespace FiSysTattler.Console.Sandbox
 					FileName = outputFilePath
 				};
 
+			var newConfig = FiSysTattlerConfiguration.LoadConfiguration(outputFilePath);
+
+			System.Console.WriteLine(newConfig.ToString());
+
 			proc.Start();
 		}
 	}
