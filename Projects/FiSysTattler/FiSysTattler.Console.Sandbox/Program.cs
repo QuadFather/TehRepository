@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,9 @@ namespace FiSysTattler.Console.Sandbox
 						};
 
 			config.Watches.Add(item);
-			var outputFilePath = "c:\\temp\\" + AppDomain.CurrentDomain.FriendlyName + ".Config.Xml";
+
+			var tempPath = Path.GetTempPath();
+			var outputFilePath = Path.Combine(tempPath, string.Format("{0}.Config.Xml", AppDomain.CurrentDomain.FriendlyName));
 			
 			Debug.WriteLine("Output Path:" + outputFilePath);
 
