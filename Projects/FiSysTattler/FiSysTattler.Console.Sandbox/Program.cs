@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,20 @@ namespace FiSysTattler.Console.Sandbox
 						};
 
 			config.Watches.Add(item);
-			config.SaveConfiguration("c:\\temp\\" + AppDomain.CurrentDomain.FriendlyName + ".Config.Xml" );
+			var outputFilePath = "c:\\temp\\" + AppDomain.CurrentDomain.FriendlyName + ".Config.Xml";
+			
+			Debug.WriteLine("Output Path:" + outputFilePath);
+
+			config.SaveConfiguration(outputFilePath);
+
+			var proc = new Process();
+			proc.StartInfo = new ProcessStartInfo
+				{
+					//Arguments = "\"" + outputFilePath + "\"",
+					FileName = outputFilePath
+				};
+
+			proc.Start();
 		}
 	}
 }

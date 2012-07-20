@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
 namespace FifSysTattler.Library.Utility
 {
-	public class SerializationHelper
+	public static class SerializationHelper
 	{
-		public static T DeSerializerFromXmlText<T>(XmlSerializer serializer, MemoryStream memStream)
+		public static T DeSerializerFromXmlText<T>(MemoryStream memStream)
 		{
-			return (T)serializer.Deserialize(memStream);
+			return (T)new XmlSerializer(typeof(T)).Deserialize(memStream);
 		}
 
-		public static MemoryStream SerializeToXmlText<T>(T item, XmlSerializer serializer, XmlSerializerNamespaces namespaces = null)
+		public static MemoryStream SerializeToXmlText<T>(T item, XmlSerializerNamespaces namespaces = null)
 		{
+			var serializer = new XmlSerializer(typeof (T));
+
 			var memStream = new MemoryStream();
 
 			var xmlText = new XmlTextWriter(memStream, Encoding.UTF8);

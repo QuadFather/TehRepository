@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml;
 using System.Xml.Serialization;
 using FifSysTattler.Library.Extensions;
 using FifSysTattler.Library.Utility;
@@ -46,12 +45,10 @@ namespace FifSysTattler.Library.Configuration
 														filePath ?? "{Not Provided}"));
 			}
 
-			var serializer = this.GetXmlSerializer();
-
 			var ns = new XmlSerializerNamespaces();
 			ns.Add(string.Empty, string.Empty);
 			
-			using (var memStream = SerializationHelper.SerializeToXmlText(this, serializer, ns))
+			using (var memStream = SerializationHelper.SerializeToXmlText(this, ns))
 			{
 				if (File.Exists(filePath))
 				{
@@ -80,9 +77,7 @@ namespace FifSysTattler.Library.Configuration
 			}
 
 			var config = new FiSysTattlerConfiguration();
-			//TODO: fix this cheap hack by properly exposing a way to get a an serializer for a type... lazy bastard
-			var serializer = config.GetXmlSerializer();
-
+			
 			using (var fileStream = File.OpenRead(filePath))
 			using (var memStream = new MemoryStream())
 			{
@@ -90,7 +85,7 @@ namespace FifSysTattler.Library.Configuration
 				fileStream.Read(memStream.GetBuffer(), 0, (int)fileStream.Length);
 				memStream.Seek(0, SeekOrigin.Begin);
 
-				config = SerializationHelper.DeSerializerFromXmlText<FiSysTattlerConfiguration>(serializer, memStream);
+				config = SerializationHelper.DeSerializerFromXmlText<FiSysTattlerConfiguration>(memStream);
 			}
 			
 			return config;

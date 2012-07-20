@@ -4,20 +4,28 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace FifSysTattler.Library.Configuration
 {
 	[Serializable]
 	public class FileSystemWatchItem
 	{
+		[XmlAttribute]
 		public string Name { get; set; }
+		[XmlElement]
 		public string Description { get; set; }
+		[XmlElement]
 		public string Path { get; set; }
+		[XmlElement]
 		public string Filter { get; set; }
+		[XmlAttribute]
 		public bool IncludeSubDirectories { get; set; }
+		//[XmlArray]
 		public NotifyFilters NotifyFilters { get; set; }
+		[XmlAttribute]
 		public int InternalBufferSize { get; set; }
-
+		[XmlAttribute]
 		public bool IsActive { get; set; }
 
 		public FileSystemWatchItem()
@@ -35,62 +43,4 @@ namespace FifSysTattler.Library.Configuration
 			IncludeSubDirectories = false;
 		}
 	}
-
-	//[Serializable]
-	//internal class FileSystemWatchItemInternal : FileSystemWatchItem
-	//{
-	//	public string NotifyFiltersText
-	//	{
-	//		get
-	//		{
-	//			var builder = new StringBuilder();
-	//			var notifyFiltersType = this.NotifyFilters.GetType();
-
-	//			var enumNames = Enum.GetNames(notifyFiltersType);
-	//			foreach (var enumName in enumNames)
-	//			{
-	//				if (Enum.IsDefined(notifyFiltersType, this.NotifyFilters))
-	//				{
-	//					builder.AppendFormat("{0}, ", enumName);
-	//				}
-	//			}
-
-	//			return builder.ToString(0, builder.Length - 2);
-	//		}
-	//		set
-	//		{
-	//			var filterTexts = value.Split(new string[] {","}, StringSplitOptions.RemoveEmptyEntries);
-
-	//			var filters = new List<NotifyFilters>();
-	//			for (var i = 0; i < filterTexts.Length; i++ )
-	//			{
-	//				NotifyFilters notifyFilters;
-	//				if (NotifyFilters.TryParse(filterTexts[i].Trim(), true, out notifyFilters))
-	//				{
-	//					if (i == 0)
-	//					{
-	//						this.NotifyFilters = notifyFilters;
-	//					}
-	//					else
-	//					{
-	//						this.NotifyFilters |= notifyFilters;
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}
-
-	//	public FileSystemWatchItem ToFileSystemWatchItem()
-	//	{
-	//		return new FileSystemWatchItem
-	//			{
-	//				NotifyFilters = this.NotifyFilters,
-	//				Filter = this.Filter,
-	//				IncludeSubDirectories = this.IncludeSubDirectories,
-	//				InternalBufferSize = this.InternalBufferSize,
-	//				IsActive = this.IsActive,
-	//				Path = this.Path
-	//			};
-	//	}
-	//}
 }

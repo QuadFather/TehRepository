@@ -39,17 +39,11 @@ namespace FifSysTattler.Library.Extensions
 		private static T XmlDeepCopy<T>(T item)
 		{
 			T copiedItem;
-			var serializer = new XmlSerializer(item.GetType());
-			using (var memStream = SerializationHelper.SerializeToXmlText(item, serializer))
+			using (var memStream = SerializationHelper.SerializeToXmlText(item))
 			{
-				copiedItem = SerializationHelper.DeSerializerFromXmlText<T>(serializer, memStream);
+				copiedItem = SerializationHelper.DeSerializerFromXmlText<T>(memStream);
 			}
 			return copiedItem;
-		}
-
-		public static XmlSerializer GetXmlSerializer<T>(this T obj)
-		{
-			return new XmlSerializer(obj.GetType());
 		}
 
 		private static T BinaryDeepCopy<T>(T item)
@@ -62,12 +56,6 @@ namespace FifSysTattler.Library.Extensions
 
 				return (T)formatter.Deserialize(ms);
 			}
-		}
-
-		public enum DeepCopyMode
-		{
-			Binary,
-			Xml
 		}
 	}
 }
