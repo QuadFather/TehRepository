@@ -83,6 +83,7 @@ namespace FiSysTattler.Library.Tests.Configuration
 			expectedConfig.SaveConfiguration(outputPath);
 
 			Assert.IsTrue(File.Exists(outputPath));
+			File.Delete(outputPath);
 		}
 
 		[TestMethod]
@@ -121,6 +122,8 @@ namespace FiSysTattler.Library.Tests.Configuration
 
 			AssertForWatch(expectedConfig.Watches[0], actualConfig.Watches[0]);
 			AssertForWatch(expectedConfig.Watches[1], actualConfig.Watches[1]);
+
+			File.Delete(outputPath);
 		}
 
 		[TestMethod]

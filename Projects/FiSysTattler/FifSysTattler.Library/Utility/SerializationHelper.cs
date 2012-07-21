@@ -30,7 +30,7 @@ namespace FifSysTattler.Library.Utility
 
 			using (var memStream = new MemoryStream())
 			{
-				var writer = new XmlTextWriter(memStream, null /*Encoding.UTF8*/);
+				var writer = new XmlTextWriter(memStream, null);
 
 				if (namespaces != null)
 				{
