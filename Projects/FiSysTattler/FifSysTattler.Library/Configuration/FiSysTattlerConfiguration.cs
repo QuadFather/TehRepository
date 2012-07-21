@@ -60,9 +60,15 @@ namespace FifSysTattler.Library.Configuration
 					File.Move(filePath, Path.Combine(folderPath, fileName + "." + Path.GetRandomFileName() + ext));
 				}
 
-				var xmlText = Encoding.UTF8.GetString(memStream.GetBuffer());
+				//var xmlText = Encoding.UTF8.GetString(memStream.GetBuffer());
+
+				//var utf8Bytes = new byte[memStream.Length];
+				//memStream.Read(utf8Bytes, 0, utf8Bytes.Length);
+				//var unicodeBytes = Encoding.Convert(Encoding.UTF8, Encoding.Unicode, utf8Bytes);
+
 				var xDoc = new XmlDocument();
-				xDoc.LoadXml(Encoding.Unicode.GetString(Encoding.Convert(Encoding.UTF8, Encoding.Unicode, memStream.GetBuffer())));
+				//xDoc.LoadXml(Encoding.Unicode.GetString(unicodeBytes));
+				xDoc.Load(memStream);
 
 				var settings = new XmlWriterSettings
 									{

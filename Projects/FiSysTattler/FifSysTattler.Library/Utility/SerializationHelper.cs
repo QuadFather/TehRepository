@@ -16,33 +16,40 @@ namespace FifSysTattler.Library.Utility
 		{
 			using (var memStream = SerializeToXmlTextStream(item, namespaces))
 			{
-				return Encoding.UTF8.GetString(memStream.GetBuffer());
+				var bytes = new byte[memStream.Length];
+				memStream.Read(bytes, 0, bytes.Length);
+				var encoded = Encoding.Convert(Encoding.UTF8, Encoding.Unicode, bytes);
+				return Encoding.Unicode.GetString(encoded);
 			}
 		}
 
 		public static MemoryStream SerializeToXmlTextStream<T>(T item, XmlSerializerNamespaces namespaces = null)
 		{
 			var serializer = new XmlSerializer(typeof(T));
+			byte[] encodedBytes = null;
 
-			var memStream = new MemoryStream();
-
-			var writer = new XmlTextWriter(memStream, Encoding.UTF8);
-
-			if (namespaces != null)
+			using (var memStream = new MemoryStream())
 			{
-				serializer.Serialize(writer, item, namespaces);
+				var writer = new XmlTextWriter(memStream, null /*Encoding.UTF8*/);
+
+				if (namespaces != null)
+				{
+					serializer.Serialize(writer, item, namespaces);
+				}
+				else
+				{
+					serializer.Serialize(writer, item);
+				}
+
+				memStream.Seek(0, SeekOrigin.Begin);
+
+				var bytes = new byte[memStream.Length];
+				memStream.Read(bytes, 0, bytes.Length);
+
+				encodedBytes = Encoding.Convert(Encoding.UTF8, Encoding.Unicode, bytes);
 			}
-			else
-			{
-				serializer.Serialize(writer, item);
-			}
 
-			memStream.Seek(0, SeekOrigin.Begin);
-
-			//TODO: Joo are here!
-			//var encodedXml = Encoding.UTF8.GetBytes();
-
-			return memStream;
+			return new MemoryStream(encodedBytes);
 		}
 	}
 }
