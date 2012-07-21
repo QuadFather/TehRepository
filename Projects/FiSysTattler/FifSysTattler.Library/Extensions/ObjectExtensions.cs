@@ -39,7 +39,8 @@ namespace FifSysTattler.Library.Extensions
 		private static T XmlDeepCopy<T>(T item)
 		{
 			T copiedItem;
-			using (var memStream = SerializationHelper.SerializeToXmlText(item))
+
+			using (var memStream = SerializationHelper.SerializeToXmlTextStream(item))
 			{
 				copiedItem = SerializationHelper.DeSerializerFromXmlText<T>(memStream);
 			}

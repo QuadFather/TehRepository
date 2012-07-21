@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 using FifSysTattler.Library.Extensions;
 using FifSysTattler.Library.Utility;
@@ -9,7 +11,7 @@ namespace FifSysTattler.Library.Configuration
 {
 	[Serializable]
 	[XmlRoot]
-    public class FiSysTattlerConfiguration
+	public class FiSysTattlerConfiguration
 	{
 		[XmlAttribute]
 		public const string FormatVersion = "1.0.0.0";
@@ -41,14 +43,14 @@ namespace FifSysTattler.Library.Configuration
 			{
 				throw new DirectoryNotFoundException(string.Format(
 														"The directory: {0}, could not be found. File: {1} could not be created.",
-														folderPath ?? "{Not Provided}", 
+														folderPath ?? "{Not Provided}",
 														filePath ?? "{Not Provided}"));
 			}
 
 			var ns = new XmlSerializerNamespaces();
 			ns.Add(string.Empty, string.Empty);
-			
-			using (var memStream = SerializationHelper.SerializeToXmlText(this, ns))
+
+			using (var memStream = SerializationHelper.SerializeToXmlTextStream(this, ns))
 			{
 				if (File.Exists(filePath))
 				{
@@ -58,13 +60,22 @@ namespace FifSysTattler.Library.Configuration
 					File.Move(filePath, Path.Combine(folderPath, fileName + "." + Path.GetRandomFileName() + ext));
 				}
 
-				using (var writer = File.OpenWrite(filePath))
+				var xmlText = Encoding.UTF8.GetString(memStream.GetBuffer());
+				var xDoc = new XmlDocument();
+				xDoc.LoadXml(Encoding.Unicode.GetString(Encoding.Convert(Encoding.UTF8, Encoding.Unicode, memStream.GetBuffer())));
+
+				var settings = new XmlWriterSettings
+									{
+										Indent = true,
+										IndentChars = "  ",
+										NewLineChars = "\r\n",
+										NewLineHandling = NewLineHandling.Replace,
+										OmitXmlDeclaration = true
+									};
+				
+				using (var writer = XmlWriter.Create(filePath, settings))
 				{
-					var buffer = new byte[1024];
-					while (memStream.Read(buffer, 0, buffer.Length) > 0)
-					{
-						writer.Write(buffer, 0, buffer.Length);
-					}
+					xDoc.Save(writer);
 				}
 			}
 		}
@@ -77,7 +88,7 @@ namespace FifSysTattler.Library.Configuration
 			}
 
 			var config = new FiSysTattlerConfiguration();
-			
+
 			using (var fileStream = File.OpenRead(filePath))
 			using (var memStream = new MemoryStream())
 			{
@@ -87,7 +98,7 @@ namespace FifSysTattler.Library.Configuration
 
 				config = SerializationHelper.DeSerializerFromXmlText<FiSysTattlerConfiguration>(memStream);
 			}
-			
+
 			return config;
 		}
 
