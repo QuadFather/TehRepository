@@ -106,7 +106,7 @@ namespace FiSysTattler.Library.Tests.Configuration
 		}
 
 		[TestMethod]
-		public void Load_Config_Should_Succees()
+		public void Load_Config_Should_Succeed()
 		{
 			var expectedConfig = GetTestConfiguration();
 

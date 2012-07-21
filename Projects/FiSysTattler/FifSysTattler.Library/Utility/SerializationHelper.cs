@@ -18,8 +18,7 @@ namespace FifSysTattler.Library.Utility
 			{
 				var bytes = new byte[memStream.Length];
 				memStream.Read(bytes, 0, bytes.Length);
-				var encoded = Encoding.Convert(Encoding.UTF8, Encoding.Unicode, bytes);
-				return Encoding.Unicode.GetString(encoded);
+				return Encoding.Unicode.GetString(bytes);
 			}
 		}
 
