@@ -130,7 +130,7 @@ namespace FiSysTattler.Library.Tests.Configuration
 		[ExpectedException(typeof(FileNotFoundException))]
 		public void Load_Config_From_Bad_Path_Should_Except()
 		{
-			var path = string.Format("z:\\{0}", Guid.NewGuid().ToString());
+			var path = string.Format("z:\\{0}", Guid.NewGuid());
 
 			var actualConfig = FiSysTattlerConfiguration.LoadConfiguration(path);
 		}

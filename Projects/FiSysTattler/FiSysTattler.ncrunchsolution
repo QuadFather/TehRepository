@@ -8,5 +8,8 @@
   <FrameworkUtilisationTypeForMSTest>UseStaticAnalysis</FrameworkUtilisationTypeForMSTest>
   <EngineModes>Run all tests automatically:BFRydWU=;Run all tests manually:BUZhbHNl;Run impacted tests automatically, others manually (experimental!):CklzSW1wYWN0ZWQ=;Run pinned tests automatically, others manually:CElzUGlubmVk</EngineModes>
   <MetricsExclusionList>
+FiSysTattler.Console.Sandbox\FiSysTattler.Console.Sandbox.csproj
+FiSysTattler.EntityFramework.Data\FiSysTattler.EntityFramework.Data.csproj
+FiSysTattler.Library.Tests\FiSysTattler.Library.Tests.csproj
 </MetricsExclusionList>
 </SolutionConfiguration>

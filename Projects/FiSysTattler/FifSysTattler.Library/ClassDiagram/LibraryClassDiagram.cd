@@ -44,7 +44,7 @@
     </TypeIdentifier>
   </Class>
   <Enum Name="FifSysTattler.Library.EventNotificationType">
-    <Position X="2.25" Y="0.5" Width="1.5" />
+    <Position X="2.25" Y="0.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAQgABAAAEAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
       <FileName>EventNotificationType.cs</FileName>

@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Configuration\FileSystemWatchItemTests.cs" />
     <Compile Include="Configuration\FiSysTattlerConfigurationTests.cs" />
+    <Compile Include="Extensions\ObjectExtensionsTests.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\SerializationHelperTests.cs" />
@@ -64,9 +65,7 @@
       <Name>FifSysTattler.Library</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

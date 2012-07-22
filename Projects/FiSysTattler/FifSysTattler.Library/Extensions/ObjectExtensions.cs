@@ -9,6 +9,8 @@ namespace FifSysTattler.Library.Extensions
 {
 	public static class ObjectExtensions
 	{
+		#region Public Methods
+
 		public static T DeepCopy<T>(this T obj, DeepCopyMode mode = DeepCopyMode.Binary)
 		{
 			return (mode == DeepCopyMode.Binary)
@@ -36,6 +38,10 @@ namespace FifSysTattler.Library.Extensions
 			return false;
 		}
 
+		#endregion //Public Methods
+
+		#region Private Methods
+
 		private static T XmlDeepCopy<T>(T item)
 		{
 			T copiedItem;
@@ -58,5 +64,7 @@ namespace FifSysTattler.Library.Extensions
 				return (T)formatter.Deserialize(ms);
 			}
 		}
+
+		#endregion //Private Methods
 	}
 }

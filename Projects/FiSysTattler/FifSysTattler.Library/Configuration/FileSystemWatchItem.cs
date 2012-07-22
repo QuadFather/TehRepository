@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace FifSysTattler.Library.Configuration
@@ -21,7 +17,7 @@ namespace FifSysTattler.Library.Configuration
 		public string Filter { get; set; }
 		[XmlAttribute]
 		public bool IncludeSubDirectories { get; set; }
-		//[XmlArray]
+		[XmlElement]
 		public NotifyFilters NotifyFilters { get; set; }
 		[XmlAttribute]
 		public int InternalBufferSize { get; set; }
