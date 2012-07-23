@@ -42,6 +42,7 @@
     <Compile Include="Configuration\Version.cs" />
     <Compile Include="EventNotificationType.cs" />
     <Compile Include="Extensions\DeepCopyMode.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Configuration\FileSystemWatchItem.cs" />
     <Compile Include="Configuration\FiSysTattlerConfiguration.cs" />
@@ -53,6 +54,7 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="ClassDiagram\LibraryClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

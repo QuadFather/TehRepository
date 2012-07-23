@@ -9,22 +9,32 @@ namespace FifSysTattler.Library.Configuration
 	{
 		[XmlAttribute]
 		public string Name { get; set; }
+
 		[XmlElement]
 		public string Description { get; set; }
+
 		[XmlElement]
 		public string Path { get; set; }
+
 		[XmlElement]
 		public string Filter { get; set; }
+
 		[XmlAttribute]
 		public bool IncludeSubDirectories { get; set; }
+
 		[XmlElement]
 		public NotifyFilters NotifyFilters { get; set; }
+
 		[XmlAttribute]
 		public int InternalBufferSize { get; set; }
+
 		[XmlAttribute]
 		public bool IsActive { get; set; }
 
-		public FileSystemWatchItem()
+		[XmlIgnore]
+		public FileSystemWatcher FileSystemWatcher { get; set; }
+
+	public FileSystemWatchItem()
 		{
 			IsActive = false;
 			NotifyFilters = NotifyFilters.Attributes |

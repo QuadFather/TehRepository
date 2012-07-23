@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FifSysTattler.Library.Configuration;
+using FifSysTattler.Library.Extensions;
+//Aliasing Dictionary<object<List<FileSystemWatchItem>> to WatcherDictionary for the purposes of brevity
+using WatcherDictionary = System.Collections.Generic.Dictionary<object, System.Collections.Generic.List<FifSysTattler.Library.Configuration.FileSystemWatchItem>>;
 
 namespace FifSysTattler.Library
 {
-	public class WatcherManager :IDisposable
+	public class WatcherManager : IDisposable
 	{
-		private Dictionary<object, List<FileSystemWatcher>> Watchers { get; set; }
+		private WatcherDictionary Watchers { get; set; }
+
+		#region Constuctors / Destructors
 
 		public WatcherManager()
 		{
-			Watchers = new Dictionary<object, List<FileSystemWatcher>>();
-
-			//InitializeWatchers(Watchers);
+			Watchers = new WatcherDictionary();
 		}
 
 		~WatcherManager()
@@ -23,43 +24,9 @@ namespace FifSysTattler.Library
 			Dispose(false);
 		}
 
-		private void InitializeWatchers(Dictionary<object, List<FileSystemWatcher>> watchers)
-		{
-			foreach (var watcher in watchers.SelectMany(pair => pair.Value))
-			{
-				InitializeWatcher(watcher);
-			}
-		}
+		#endregion //Constuctors / Destructors
 
-		private void TearDownWatchers(Dictionary<object, List<FileSystemWatcher>> watchers)
-		{
-			foreach (var watcher in watchers.SelectMany(pair => pair.Value))
-			{
-				TearDownWatcher(watcher);
-			}
-		}
-
-		private void InitializeWatcher(FileSystemWatcher watcher)
-		{
-			watcher.EnableRaisingEvents = true;
-
-			watcher.Changed += Watcher_Changed;
-			watcher.Created += Watcher_Created;
-			watcher.Deleted += Watcher_Deleted;
-			watcher.Error += Watcher_Error;
-			watcher.Renamed += Watcher_Renamed;
-		}
-
-		private void TearDownWatcher(FileSystemWatcher watcher)
-		{
-			watcher.EnableRaisingEvents = false;
-
-			watcher.Changed -= Watcher_Changed;
-			watcher.Created -= Watcher_Created;
-			watcher.Deleted -= Watcher_Deleted;
-			watcher.Error -= Watcher_Error;
-			watcher.Renamed -= Watcher_Renamed;
-		}
+		#region Private Methods
 
 		#region FileSystemWatcher Event Handlers
 
@@ -90,6 +57,63 @@ namespace FifSysTattler.Library
 
 		#endregion //FileSystemWatcher Event Handlers
 
+		private void InitializeWatchList(object key, List<FileSystemWatchItem> watchList)
+		{
+			foreach (var watchItem in watchList)
+			{
+				var fileSystemWatcher = new FileSystemWatcher(watchItem.Path, watchItem.Filter)
+					{
+						IncludeSubdirectories = watchItem.IncludeSubDirectories,
+						InternalBufferSize = watchItem.InternalBufferSize,
+					};
+
+				if (watchItem.IsActive)
+				{
+					fileSystemWatcher.EnableRaisingEvents = false;
+
+					fileSystemWatcher.Created += Watcher_Created;
+					fileSystemWatcher.Deleted += Watcher_Deleted;
+					fileSystemWatcher.Error += Watcher_Error;
+					fileSystemWatcher.Renamed += Watcher_Renamed;
+				}
+
+				watchItem.FileSystemWatcher = fileSystemWatcher;
+			}
+
+			Watchers.SmartAdd(key, watchList);
+		}
+
+		private void TearDownAllWatchers(WatcherDictionary watchers)
+		{
+			foreach (var pair in watchers)
+			{
+				TearDownWatchers(pair.Value);
+			}
+		}
+
+		private void TearDownWatchers(List<FileSystemWatchItem> watcherList)
+		{
+			watcherList.ForEach(fsw =>  {
+											fsw.IsActive = false;
+											TearDownWatcher(fsw.FileSystemWatcher);
+										});
+		}
+
+		private void TearDownWatcher(FileSystemWatcher watcher)
+		{
+			watcher.EnableRaisingEvents = false;
+
+			watcher.Changed -= Watcher_Changed;
+			watcher.Created -= Watcher_Created;
+			watcher.Deleted -= Watcher_Deleted;
+			watcher.Error -= Watcher_Error;
+			watcher.Renamed -= Watcher_Renamed;
+		}
+
+		#endregion //Private Methods
+
+		#region Public Method
+
 		#region IDisposable Members
 
 		public void Dispose()
@@ -98,17 +122,48 @@ namespace FifSysTattler.Library
 			GC.SuppressFinalize(this);
 		}
 
-		public void Dispose(bool disposing)
+		private void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
 				//free managed resources
-				TearDownWatchers(Watchers);
+				TearDownAllWatchers(Watchers);
+				Watchers.Clear();
+				Watchers = null;
 			}
 
 			//free native resources
 		}
 
 		#endregion
+
+		#region Manager Functions
+
+		public void Load(object key, string configFilePath)
+		{
+			if (string.IsNullOrWhiteSpace(configFilePath))
+			{
+				throw new ArgumentException("configFilePath can not be null.", "configFilePath");
+			}
+
+			Watchers.Clear();
+
+			AddConfig(key, configFilePath);
+		}
+
+		public void AddConfig(object key, string configFilePath)
+		{
+			var watcherConfig = FiSysTattlerConfiguration.LoadConfiguration(configFilePath);
+			AddConfig(key, watcherConfig);
+		}
+		
+		public void AddConfig(object key, FiSysTattlerConfiguration watcherConfig)
+		{
+			InitializeWatchList(key, watcherConfig.Watches);
+		}
+
+		#endregion //Manager Functions
+
+		#endregion //Public Method
 	}
 }
